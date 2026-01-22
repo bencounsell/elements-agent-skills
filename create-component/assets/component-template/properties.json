@@ -1,0 +1,17 @@
+{
+  "groups": [
+    {
+      "title": "Content",
+      "icon": "text.alignleft",
+      "properties": [
+        {
+          "title": "Heading",
+          "id": "heading",
+          "text": {
+            "default": "Enter heading"
+          }
+        }
+      ]
+    }
+  ]
+}
