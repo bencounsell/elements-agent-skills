@@ -154,36 +154,194 @@ The `id` becomes the variable name in templates: `{{propertyId}}`
 
 ### Theme Color
 
+Uses the theme's color palette. Specify color name and brightness level.
+
 ```json
 {
-  "title": "Background",
-  "id": "bgColor",
+  "title": "Button Color",
+  "id": "buttonColor",
+  "format": "bg-{{value}}",
   "themeColor": {
-    "default": "background"
+    "default": {
+      "name": "brand",
+      "brightness": 500
+    }
+  }
+}
+```
+
+Output: `bg-brand-500`
+
+**With light and dark mode colors:**
+
+```json
+{
+  "title": "Surface Color",
+  "id": "surfaceColor",
+  "themeColor": {
+    "default": {
+      "name": "surface",
+      "brightness": 800,
+      "darkName": "surface",
+      "darkBrightness": 50
+    }
   }
 }
 ```
 
 ### Theme Font
 
+Uses the theme's font families. Supports responsive breakpoints.
+
 ```json
 {
-  "title": "Heading Font",
-  "id": "headingFont",
+  "title": "Headline Font",
+  "id": "headlineFont",
   "themeFont": {
-    "default": "heading"
+    "default": {
+      "base": { "name": "heading" },
+      "md": { "name": "display" }
+    }
+  }
+}
+```
+
+Output: `font-heading md:font-display`
+
+### Theme Text Style
+
+Uses the theme's text size scale.
+
+```json
+{
+  "title": "Heading Size",
+  "id": "headingTextStyle",
+  "themeTextStyle": {
+    "default": {
+      "base": { "name": "3xl" },
+      "md": { "name": "5xl" }
+    }
+  }
+}
+```
+
+### Theme Typography
+
+Uses the theme's typography presets (e.g., article styles).
+
+```json
+{
+  "title": "Article Style",
+  "id": "articleStyle",
+  "themeTypography": {
+    "default": {
+      "base": { "name": "article" },
+      "md": { "name": "article-lg" }
+    }
+  }
+}
+```
+
+### Theme Border Width
+
+```json
+{
+  "title": "Card Border",
+  "id": "cardBorderWidth",
+  "themeBorderWidth": {
+    "default": {
+      "base": {
+        "top": "1",
+        "right": "1",
+        "bottom": "1",
+        "left": "1"
+      }
+    }
+  }
+}
+```
+
+### Theme Border Radius
+
+Uses the theme's border radius scale.
+
+```json
+{
+  "title": "Card Radius",
+  "id": "cardRadius",
+  "themeBorderRadius": {
+    "default": {
+      "base": {
+        "topRight": "lg",
+        "topLeft": "lg",
+        "bottomRight": "lg",
+        "bottomLeft": "lg"
+      }
+    }
+  }
+}
+```
+
+### Theme Shadow
+
+Uses the theme's shadow scale.
+
+```json
+{
+  "title": "Card Shadow",
+  "id": "cardShadow",
+  "themeShadow": {
+    "default": {
+      "name": "sm"
+    }
   }
 }
 ```
 
 ### Theme Spacing
 
+For padding, margin, gap, and positioning. Uses the theme's spacing scale for consistency.
+
+**Available modes:** `padding`, `margin`, `gap`, `transition`, `position`, `single`
+
 ```json
 {
-  "title": "Padding",
-  "id": "padding",
+  "title": "Card Padding",
+  "id": "cardPadding",
   "themeSpacing": {
-    "default": "md"
+    "mode": "padding",
+    "default": {
+      "base": {
+        "left": "sm",
+        "right": "sm",
+        "top": "sm",
+        "bottom": "sm"
+      },
+      "md": {
+        "left": "lg",
+        "right": "lg",
+        "top": "lg",
+        "bottom": "lg"
+      }
+    }
+  }
+}
+```
+
+**Single mode** - for a single spacing value:
+
+```json
+{
+  "title": "Badge Offset",
+  "id": "badgeOffsetTop",
+  "format": "top-{{value}}",
+  "themeSpacing": {
+    "mode": "single",
+    "default": {
+      "base": {
+        "value": "2"
+      }
+    }
   }
 }
 ```
@@ -304,12 +462,18 @@ Enable per-breakpoint values:
         {
           "title": "Background",
           "id": "bgColor",
-          "themeColor": { "default": "primary" }
+          "format": "bg-{{value}}",
+          "themeColor": {
+            "default": { "name": "brand", "brightness": 500 }
+          }
         },
         {
           "title": "Text Color",
           "id": "textColor",
-          "themeColor": { "default": "on-primary" }
+          "format": "text-{{value}}",
+          "themeColor": {
+            "default": { "name": "brand", "brightness": 50 }
+          }
         }
       ]
     }

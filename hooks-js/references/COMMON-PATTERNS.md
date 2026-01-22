@@ -22,23 +22,6 @@ const transformHook = (rw) => {
 };
 ```
 
-### Tailwind-Style Classes
-
-```javascript
-const transformHook = (rw) => {
-  const { padding, margin, bgColor, textColor } = rw.props;
-
-  const containerClasses = [
-    `p-${padding}`,
-    `m-${margin}`,
-    `bg-${bgColor}`,
-    `text-${textColor}`
-  ].join(' ');
-
-  rw.setProps({ containerClasses });
-};
-```
-
 ### Conditional Class Groups
 
 ```javascript
@@ -242,29 +225,6 @@ const transformHook = (rw) => {
     // Show debug info only in edit mode
     showDebug: mode === 'edit'
   });
-};
-```
-
-## Responsive Values
-
-### Build Responsive Classes
-
-```javascript
-const transformHook = (rw) => {
-  const { columns, gap } = rw.responsiveProps;
-
-  const gridClasses = [
-    `grid-cols-${columns.mobile || 1}`,
-    columns.tablet && `md:grid-cols-${columns.tablet}`,
-    columns.desktop && `lg:grid-cols-${columns.desktop}`,
-    `gap-${gap.mobile || 4}`,
-    gap.tablet && `md:gap-${gap.tablet}`,
-    gap.desktop && `lg:gap-${gap.desktop}`
-  ]
-    .filter(Boolean)
-    .join(' ');
-
-  rw.setProps({ gridClasses });
 };
 ```
 
