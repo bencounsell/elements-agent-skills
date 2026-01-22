@@ -72,7 +72,7 @@ Editable rich text with formatting options (bold, italic, links, lists).
 ### With Default
 
 ```html
-@richtext("description", title: "Description", default: "<p>Enter your description here...</p>")
+@richtext("description", title: "Description", default: "Enter your description here...")
 ```
 
 ### Common Patterns
@@ -98,30 +98,59 @@ Editable rich text with formatting options (bold, italic, links, lists).
 
 ### Styling Rich Text
 
-Rich text outputs standard HTML tags. Style them in your CSS:
+Rich text outputs standard HTML tags. Style them using Tailwind's typography plugin.
 
-```css
-/* In your component CSS */
-.my-component p {
-  margin-bottom: 1em;
-}
+**Note:** Always use Tailwind classes for styling—never custom CSS.
 
-.my-component ul, .my-component ol {
-  margin-left: 1.5em;
-}
+```html
+<!-- Use the prose class for automatic rich text styling -->
+<div class="prose prose-lg">
+  @richtext("content", title: "Content")
+</div>
 
-.my-component a {
-  color: var(--link-color);
-}
+<!-- Customize prose styles -->
+<div class="prose prose-blue prose-lg max-w-none">
+  @richtext("articleBody", title: "Article")
+</div>
 
-.my-component strong {
-  font-weight: bold;
-}
+<!-- Or target specific elements with arbitrary variants -->
+<div class="[&_p]:mb-4 [&_ul]:ml-6 [&_ol]:ml-6 [&_a]:text-blue-600 [&_a]:underline">
+  @richtext("content", title: "Content")
+</div>
+```
 
-.my-component em {
-  font-style: italic;
+### Using Theme Typography
+
+For user-configurable typography styles, use the `themeTypography` control in properties.json. This displays a typography picker that lets users select from styles defined in Theme Studio.
+
+**In properties.json:**
+
+```json
+{
+  "title": "Article Style",
+  "id": "articleStyle",
+  "themeTypography": {
+    "default": {
+      "base": {
+        "name": "article"
+      },
+      "md": {
+        "name": "article-lg"
+      }
+    }
+  }
 }
 ```
+
+**In template:**
+
+```html
+<div class="{{articleStyle}}">
+  @richtext("content", title: "Content")
+</div>
+```
+
+The `themeTypography` control outputs Tailwind prose classes based on the theme's typography configuration, making it ideal for rich text and markdown content areas.
 
 ---
 
@@ -243,20 +272,29 @@ For side-by-side children (like columns):
 @endif
 ```
 
-### Dropzone in Loop Items
+### Dropzones Inside Loops
 
-For repeatable sections, use collections instead of dropzones in loops:
+Dropzones can be placed inside `@each` loops to create dynamic, repeating content areas. This is useful for components like tab panels, accordion sections, or multi-column layouts where each iteration needs its own dropzone.
+
+The dropzone name and title must be static text—you cannot use dynamic values like `{{index}}` or template variables inside the dropzone declaration. Elements automatically handles creating unique dropzones for each loop iteration.
 
 ```html
-<!-- DON'T do this -->
-@each(item in items)
-  @dropzone("item-content")  <!-- Won't work as expected -->
+<!-- Tab panels with per-tab dropzones -->
+@each(tab in tabs)
+  <div class="tab-panel">
+    @dropzone("panel", title: "Panel")
+  </div>
 @endeach
 
-<!-- DO this instead - use collection data -->
-@each(item in items)
-  <div class="item">
-    {{item.content}}
+<!-- Accordion with content dropzones -->
+@each(section in sections)
+  <div class="accordion-item">
+    <button class="accordion-header">
+      {{section.title}}
+    </button>
+    <div class="accordion-body">
+      @dropzone("content", title: "Section Content")
+    </div>
   </div>
 @endeach
 ```
@@ -308,19 +346,17 @@ Always provide helpful defaults:
 
 ### Edit Mode Placeholders
 
-Show helpful messages when content is empty:
+Show helpful messages when the a property or properties are empty:
 
 ```html
-<div class="content-area">
-  @dropzone("content", title: "Page Content")
-
-  @if(edit)
-    <!-- Only visible in edit mode -->
-    <div class="edit-hint" style="opacity: 0.5; padding: 2rem; text-align: center;">
-      Drop components here to build your page
-    </div>
-  @endif
-</div>
+@if(!hasImages)
+  <div rwResourceDropZone="images">
+      <!-- Only visible in edit mode when dropzone is empty -->
+      <div class="opacity-50 p-8 text-center">
+        Drop folder here to add images
+      </div>
+  </div>
+@endif
 ```
 
 ### Accessibility

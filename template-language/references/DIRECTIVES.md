@@ -155,36 +155,59 @@ Conditional rendering.
 @endif
 ```
 
-**Operators:**
-| Operator | Example | Description |
-|----------|---------|-------------|
-| `==` | `size == "large"` | Equal |
-| `!=` | `type != "hidden"` | Not equal |
-| `>` | `count > 0` | Greater than |
-| `<` | `index < 5` | Less than |
-| `>=` | `items >= 1` | Greater or equal |
-| `<=` | `padding <= 10` | Less or equal |
-| `&&` | `a && b` | Logical AND |
-| `\|\|` | `a \|\| b` | Logical OR |
-| `!` | `!isEmpty` | Logical NOT |
+**Supported in templates:**
+- Boolean property checks: `@if(showHeader)`
+- Negation with `!`: `@if(!edit)`
+- Built-in mode variables: `edit`, `preview`
+- Loop helpers: `item::isFirst`, `item::isLast`, `item::index`
+
+**NOT supported in templates:**
+- Comparison operators (`==`, `!=`, `>`, `<`, `>=`, `<=`)
+- Logical operators (`&&`, `||`)
+- String comparisons
+
+For complex logic, compute boolean values in hooks.js and pass them to the template.
 
 **Examples:**
 ```html
+<!-- Simple boolean check -->
 @if(showHeader)
   <header>{{headerText}}</header>
 @endif
 
-@if(variant == "primary")
+<!-- Negation -->
+@if(!edit)
+  <p>Visible when published</p>
+@endif
+
+<!-- Edit/preview mode detection -->
+@if(edit)
+  <p>Edit mode content</p>
+@elseif(preview)
+  <p>Preview mode content</p>
+@else
+  <p>Published content</p>
+@endif
+
+<!-- Using computed booleans from hooks.js -->
+@if(isPrimary)
   <button class="btn-primary">{{text}}</button>
-@elseif(variant == "secondary")
+@elseif(isSecondary)
   <button class="btn-secondary">{{text}}</button>
 @else
   <button class="btn-default">{{text}}</button>
 @endif
+```
 
-@if(isLoggedIn && hasPermission)
-  <div class="admin-panel">...</div>
-@endif
+**In hooks.js** (for complex conditions):
+```javascript
+function processProperties(rw) {
+  // Compute boolean values for template use
+  rw.isPrimary = rw.variant === "primary";
+  rw.isSecondary = rw.variant === "secondary";
+  rw.showAdminPanel = rw.isLoggedIn && rw.hasPermission;
+  rw.hasMultipleItems = rw.items.length > 1;
+}
 ```
 
 ---
@@ -201,16 +224,11 @@ Loop over collections.
 ```
 
 **Loop Helpers:**
-| Helper | Description |
-|--------|-------------|
-| `item::isFirst` | True for first item |
-| `item::isLast` | True for last item |
-| `item::index` | Zero-based index |
-| `item::number` | One-based number (index + 1) |
-| `item::isEven` | True for even indices |
-| `item::isOdd` | True for odd indices |
-| `collection::isEmpty` | True if empty |
-| `collection::count` | Number of items |
+| Helper | Type | Description |
+|--------|------|-------------|
+| `item::index` | Number | Zero-based index of the current item |
+| `item::isFirst` | Boolean | True if this is the first item |
+| `item::isLast` | Boolean | True if this is the last item |
 
 **Examples:**
 ```html
@@ -221,15 +239,10 @@ Loop over collections.
 </ul>
 
 @each(slide in slides)
-  <div class="slide @if(slide::isFirst)active@endif">
-    <span>{{slide::number}} of {{slides::count}}</span>
+  <div class="slide @if(slide::isFirst)active@endif" data-index="{{slide::index}}">
     {{slide.content}}
   </div>
 @endeach
-
-@if(items::isEmpty)
-  <p>No items found.</p>
-@endif
 ```
 
 ---
@@ -245,7 +258,7 @@ Include external template file.
 ```
 
 **Notes:**
-- Template files live in `templates/includes/` folder
+- Template files live in `templates/include/` folder
 - File extension is optional (`.html` assumed)
 - Parameters become available as variables in the included template
 
@@ -279,6 +292,8 @@ Conditional include.
 ## @template
 
 Define inline reusable template.
+
+> **Note:** `@template` directives must be defined at the top of your template file, before any HTML output.
 
 **Syntax:**
 ```html

@@ -24,61 +24,86 @@ Patterns and recipes for @if and @each directives.
 
 ### Multiple Conditions
 
+Compute boolean values in hooks.js, then use them in templates:
+
+```javascript
+// hooks.js
+function processProperties(rw) {
+  rw.isActive = rw.status === "active";
+  rw.isPending = rw.status === "pending";
+  rw.isInactive = rw.status === "inactive";
+}
+```
+
 ```html
-@if(status == "active")
+@if(isActive)
   <span class="badge-active">Active</span>
-@elseif(status == "pending")
+@elseif(isPending)
   <span class="badge-pending">Pending</span>
-@elseif(status == "inactive")
+@elseif(isInactive)
   <span class="badge-inactive">Inactive</span>
 @else
   <span class="badge-unknown">Unknown</span>
 @endif
 ```
 
-### Comparison Operators
+### Complex Conditions
+
+Comparison operators (`==`, `!=`, `>`, `<`) and logical operators (`&&`, `||`) are **not supported** in templates. Compute these in hooks.js instead:
+
+```javascript
+// hooks.js
+function processProperties(rw) {
+  // Comparisons
+  rw.hasNoItems = rw.count === 0;
+  rw.hasItems = rw.items.length > 0;
+  rw.isComplete = rw.progress >= 100;
+  rw.isVisible = rw.type !== "hidden";
+
+  // Logical combinations
+  rw.showArticle = rw.isPublished && rw.isVisible;
+  rw.hasAdminAccess = rw.isAdmin || rw.isModerator;
+  rw.canEdit = (rw.isLoggedIn && rw.hasPermission) || rw.isAdmin;
+}
+```
 
 ```html
-<!-- Equality -->
-@if(count == 0)
+@if(hasNoItems)
   <p>No items</p>
 @endif
 
-@if(type != "hidden")
-  <div>{{content}}</div>
+@if(hasItems)
+  <p>{{itemCount}} items found</p>
 @endif
 
-<!-- Numeric comparisons -->
-@if(items > 0)
-  <p>{{items}} items found</p>
-@endif
-
-@if(progress >= 100)
+@if(isComplete)
   <span>Complete!</span>
 @endif
-```
 
-### Logical Operators
-
-```html
-<!-- AND -->
-@if(isPublished && isVisible)
+@if(showArticle)
   <article>{{content}}</article>
 @endif
 
-<!-- OR -->
-@if(isAdmin || isModerator)
+@if(hasAdminAccess)
   <div class="admin-tools">...</div>
 @endif
 
-<!-- NOT -->
+@if(canEdit)
+  <button>Edit</button>
+@endif
+```
+
+### Negation
+
+The `!` operator **is supported** in templates:
+
+```html
 @if(!isEmpty)
   <ul>...</ul>
 @endif
 
-<!-- Combined -->
-@if((isLoggedIn && hasPermission) || isAdmin)
-  <button>Edit</button>
+@if(!edit)
+  <!-- Only in preview/published mode -->
 @endif
 ```
 
@@ -171,12 +196,8 @@ For attributes:
 @each(slide in slides)
   <div class="slide
     @if(slide::isFirst)first active@endif
-    @if(slide::isLast)last@endif
-    @if(slide::isEven)even@endif
-    @if(slide::isOdd)odd@endif"
+    @if(slide::isLast)last@endif"
     data-index="{{slide::index}}">
-
-    <span class="counter">{{slide::number}} / {{slides::count}}</span>
     {{slide.content}}
   </div>
 @endeach
@@ -184,8 +205,10 @@ For attributes:
 
 ### Empty State
 
+Use a boolean computed in hooks.js to check for empty collections:
+
 ```html
-@if(items::isEmpty)
+@if(hasNoItems)
   <div class="empty-state">
     <p>No items to display</p>
     @if(edit)
@@ -283,7 +306,7 @@ rw.setProps({ limitedItems, hasMore: items.length > 3 });
 @endeach
 
 @if(hasMore)
-  <a href="{{viewAllLink}}">View all {{items::count}} items</a>
+  <a href="{{viewAllLink}}">View all {{itemCount}} items</a>
 @endif
 ```
 
@@ -292,6 +315,18 @@ rw.setProps({ limitedItems, hasMore: items.length > 3 });
 ## Combined Patterns
 
 ### Responsive Grid
+
+```javascript
+// hooks.js - compute isEmpty boolean
+const transformHook = (rw) => {
+  const { items } = rw.collections;
+  rw.setProps({
+    items,
+    hasNoItems: items.length === 0
+  });
+};
+exports.transformHook = transformHook;
+```
 
 ```html
 <div class="grid {{gridClasses}}">
@@ -305,8 +340,10 @@ rw.setProps({ limitedItems, hasMore: items.length > 3 });
   @endeach
 </div>
 
-@if(items::isEmpty && edit)
-  <div class="placeholder">Add items to populate the grid</div>
+@if(hasNoItems)
+  @if(edit)
+    <div class="placeholder">Add items to populate the grid</div>
+  @endif
 @endif
 ```
 

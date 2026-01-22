@@ -92,14 +92,20 @@ Access nested properties:
   <header>{{headerText}}</header>
 @endif
 
-@if(variant == "primary")
+@if(variantPrimary)
   <div class="btn-primary">{{buttonText}}</div>
-@elseif(variant == "secondary")
+@elseif(variantSecondary)
   <div class="btn-secondary">{{buttonText}}</div>
 @else
   <div class="btn-default">{{buttonText}}</div>
 @endif
 ```
+
+> **Note:** Comparisons like `variant == "primary"` cannot be done in templates. Compute boolean values in hooks.js first:
+> ```javascript
+> const variantPrimary = rw.props.variant === "primary";
+> const variantSecondary = rw.props.variant === "secondary";
+> ```
 
 ### 3. Loop Over Collections
 
@@ -189,7 +195,7 @@ Access nested properties:
   @endeach
 </div>
 
-@if(items::isEmpty)
+@if(hasNoItems)
   <p class="empty-message">No items to display.</p>
 @endif
 ```
@@ -224,6 +230,8 @@ Access nested properties:
 
 ### Inline Template Reuse
 
+> **Note:** `@template` directives must be defined at the top of your template file, before any HTML output.
+
 ```html
 @template("social-icon")
   <a href="{{url}}" class="social-icon" aria-label="{{label}}">
@@ -248,16 +256,11 @@ Access nested properties:
 
 Inside `@each` loops, use `::` to access loop metadata:
 
-| Helper | Description |
-|--------|-------------|
-| `item::isFirst` | True for first item |
-| `item::isLast` | True for last item |
-| `item::index` | Zero-based index |
-| `item::number` | One-based number |
-| `item::isEven` | True for even indices |
-| `item::isOdd` | True for odd indices |
-| `items::isEmpty` | True if collection is empty |
-| `items::count` | Number of items |
+| Helper | Type | Description |
+|--------|------|-------------|
+| `item::index` | Number | Zero-based index of the current item |
+| `item::isFirst` | Boolean | True if this is the first item |
+| `item::isLast` | Boolean | True if this is the last item |
 
 ```html
 @each(slide in slides)
