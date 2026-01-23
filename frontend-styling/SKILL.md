@@ -1,20 +1,20 @@
 ---
 name: frontend-styling
-description: Style RapidWeaver Elements components using Tailwind CSS and the theme system. Use when applying colors, spacing, typography, borders, shadows, responsive layouts, or generating dynamic class strings.
+description: Style RapidWeaver Elements components using Tailwind CSS 3 and the theme system. Use when applying colors, spacing, typography, borders, shadows, responsive layouts, or generating dynamic class strings.
 license: MIT
 metadata:
   author: Elements Platform
-  version: "1.1"
+  version: "1.2"
 ---
 
 # Elements Frontend Styling
 
-This skill covers styling Elements components using Tailwind CSS utilities and the integrated theme system.
+This skill covers styling Elements components using **Tailwind CSS 3** utilities and the integrated theme system.
 
 ## Core Styling Concepts
 
 ### Utility Composition
-Elements uses Tailwind CSS. Style components by composing utility classes in your templates:
+Elements uses Tailwind CSS 3. Style components by composing utility classes in your templates:
 
 ```html
 <div class="bg-brand-500 text-white p-4 rounded-lg shadow-md">
