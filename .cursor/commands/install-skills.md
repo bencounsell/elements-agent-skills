@@ -28,4 +28,4 @@ ln -s /Users/ben/Developer/elements-agent-skills/create-component ~/.cursor/skil
 
 - Use the repository's absolute path when creating symlinks
 - A skill folder is any directory containing a `SKILL.md` file
-- Expected skills: `create-component`, `frontend-styling`, `hooks-js`, `properties-json`, `template-language`, `skill-creator`
+- Expected skills: `create-component`, `frontend-styling`, `hooks-js`, `properties-json`, `shared-assets`, `template-language`, `skill-creator`
