@@ -1,6 +1,6 @@
 ---
 name: shared-assets
-description: Share CSS, JavaScript, images, and fonts between multiple components in an Element Pack. Use when setting up shared libraries, global styles, or common resources that multiple components depend on.
+description: Share CSS, JavaScript, images, and fonts between multiple components in an Element Pack. Use when setting up shared libraries, obtaining third-party dependencies, initializing JavaScript libraries, global styles, or common resources that multiple components depend on.
 license: MIT
 metadata:
   author: Elements Platform
@@ -67,6 +67,33 @@ shared/
 ```
 
 The library loads once per page, regardless of how many components use it.
+
+## Obtaining Libraries
+
+### Local Files vs CDN
+
+Always use local files for Elements components:
+- **Works in preview mode** - RapidWeaver preview requires local files
+- **No external dependencies** - Sites work offline and aren't affected by CDN outages
+- **Version control** - Library versions are locked and predictable
+
+CDN links don't work in Elements preview mode and create external dependencies.
+
+### Where to Download
+
+| Source | How to Get Files |
+|--------|-----------------|
+| npm | Run `npm pack <package>` and extract, or copy from `node_modules/<package>/dist/` |
+| cdnjs.com | Browse to library, click file links to download |
+| unpkg.com | Visit `unpkg.com/<package>/` to browse and download files |
+| jsdelivr.com | Visit `jsdelivr.com/package/npm/<package>` for file browser |
+| GitHub | Check the Releases page for pre-built distribution files |
+
+### File Selection
+
+- Use minified production builds (`.min.js`, `.min.css`) for smaller file sizes
+- For libraries with plugins, only include the plugins you need
+- Check for UMD builds if the library offers multiple formats (UMD works in browser `<script>` tags)
 
 ## Injection Points
 
@@ -157,6 +184,77 @@ Components can configure shared libraries using portals:
 ```
 
 The library loads from shared assets; each component instance configures it via portal.
+
+## Library Initialization Patterns
+
+### Deferred Loading
+
+Use `defer` for scripts that don't need to run immediately:
+
+```html
+<!-- shared/templates/headEnd/library.html -->
+<script defer src="{{assetPath}}/library.min.js"></script>
+```
+
+For initialization that requires DOM elements, use `DOMContentLoaded`:
+
+```html
+<!-- shared/templates/bodyEnd/lightbox.html -->
+<script src="{{assetPath}}/lightbox.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  lightbox.option({
+    'resizeDuration': 200,
+    'wrapAround': true
+  });
+});
+</script>
+```
+
+### Per-Instance Configuration
+
+When multiple component instances need different configurations, use portals with unique identifiers:
+
+```html
+<!-- com.example.gallery/templates/index.html -->
+<div class="gallery" data-gallery-id="{{id}}">
+  <!-- gallery content -->
+</div>
+
+@portal(bodyEnd)
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const el = document.querySelector('[data-gallery-id="{{id}}"]');
+  if (el) {
+    new Gallery(el, {
+      columns: {{columns}},
+      gap: {{gap}}
+    });
+  }
+});
+</script>
+@endportal
+```
+
+The `{{id}}` property (available via `rw.component.id` in hooks.js) uniquely identifies each component instance.
+
+### Dependency Ordering
+
+When libraries depend on other libraries, control load order with separate injection files:
+
+```
+shared/templates/bodyEnd/
+  01-alpine.html        # Loads first (alphabetical order)
+  02-alpine-plugins.html
+```
+
+Or combine into a single file with correct order:
+
+```html
+<!-- shared/templates/bodyEnd/alpine-stack.html -->
+<script src="{{assetPath}}/alpine-focus.min.js"></script>
+<script src="{{assetPath}}/alpine.min.js"></script>
+```
 
 ## Asset Path Variables
 
