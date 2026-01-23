@@ -137,6 +137,8 @@ Access nested properties:
 
 ### 6. Include Partials
 
+> **Note:** Include files must be placed in the `templates/include/` folder. When referencing them, use only the filename—the `include/` path is implicit. For example, a file at `templates/include/lightbox.html` would be referenced as `template: "lightbox"`.
+
 ```html
 @include("button", label: "Click Me", style: "primary")
 
