@@ -145,13 +145,28 @@ exports.transformHook = transformHook;
 }
 ```
 
+**hooks.js:**
+```javascript
+const transformHook = (rw) => {
+  const { headingLevel } = rw.props;
+
+  rw.setProps({
+    isH1: headingLevel === "h1",
+    isH2: headingLevel === "h2",
+    isH3: headingLevel === "h3"
+  });
+};
+
+exports.transformHook = transformHook;
+```
+
 **templates/index.html:**
 ```html
-@if(headingLevel == "h1")
+@if(isH1)
   <h1>{{headingText}}</h1>
-@elseif(headingLevel == "h2")
+@elseif(isH2)
   <h2>{{headingText}}</h2>
-@elseif(headingLevel == "h3")
+@elseif(isH3)
   <h3>{{headingText}}</h3>
 @else
   <h4>{{headingText}}</h4>
