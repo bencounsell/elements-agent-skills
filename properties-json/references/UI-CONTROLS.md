@@ -38,7 +38,7 @@ With subtitle:
 }
 ```
 
-### textarea
+### textArea
 
 Multi-line text input.
 
@@ -46,7 +46,7 @@ Multi-line text input.
 {
   "title": "Description",
   "id": "description",
-  "textarea": {
+  "textArea": {
     "default": "Enter a description..."
   }
 }
@@ -243,7 +243,11 @@ Dropdown menu.
   "id": "size",
   "select": {
     "default": "medium",
-    "options": ["small", "medium", "large"]
+    "items": [
+      { "title": "Small", "value": "small" },
+      { "title": "Medium", "value": "medium" },
+      { "title": "Large", "value": "large" }
+    ]
   }
 }
 ```
@@ -253,7 +257,6 @@ Dropdown menu.
 | Option | Type | Description |
 |--------|------|-------------|
 | `default` | string | Initially selected value |
-| `options` | array | Simple string array |
 | `items` | array | Objects with title/value |
 
 #### Select with Title/Value Items
@@ -505,13 +508,7 @@ Visual separator line.
 
 ### heading
 
-Section heading within a group.
-
-```json
-{ "heading": "Advanced Settings" }
-```
-
-Or with object syntax:
+Section heading within a group. The heading text comes from the `title` key:
 
 ```json
 { "heading": {}, "title": "Advanced Settings" }
@@ -557,12 +554,12 @@ Can be combined with visibility:
         {
           "title": "Description",
           "id": "description",
-          "textarea": {
+          "textArea": {
             "default": "A short description"
           }
         },
         { "divider": {} },
-        { "heading": "Button" },
+        { "heading": {}, "title": "Button" },
         {
           "title": "Show Button",
           "id": "showButton",

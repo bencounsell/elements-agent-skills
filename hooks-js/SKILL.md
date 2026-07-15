@@ -147,7 +147,7 @@ const transformHook = (rw) => {
   "id": "alignment",
   "segmented": {
     "default": "center",
-    "options": [
+    "items": [
       { "title": "Left", "value": "left" },
       { "title": "Center", "value": "center" },
       { "title": "Right", "value": "right" }
@@ -260,24 +260,7 @@ exports.transformHook = transformHook;
 
 ### Responsive Values
 
-**hooks.js:**
-```javascript
-const transformHook = (rw) => {
-  const { columns } = rw.responsiveProps;
-
-  // columns = { mobile: "1", tablet: "2", desktop: "3" }
-
-  const gridClasses = [
-    `grid-cols-${columns.mobile}`,
-    `md:grid-cols-${columns.tablet}`,
-    `lg:grid-cols-${columns.desktop}`
-  ].join(' ');
-
-  rw.setProps({ gridClasses });
-};
-
-exports.transformHook = transformHook;
-```
+Properties with a `format` string already include responsive breakpoint prefixes automatically. For example, a `columns` select with `"format": "grid-cols-{{value}}"` outputs `grid-cols-1 md:grid-cols-2 lg:grid-cols-3` when the user sets per-breakpoint values. Use `{{columns}}` directly in the template -- no hooks.js processing needed.
 
 ## Guidelines
 

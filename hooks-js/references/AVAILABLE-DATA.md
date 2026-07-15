@@ -67,7 +67,15 @@ Property values organized by breakpoint when `"responsive": true` is set.
 {
   "id": "columns",
   "responsive": true,
-  "select": { "default": "3", "options": ["1", "2", "3", "4"] }
+  "select": {
+    "default": "3",
+    "items": [
+      { "title": "1", "value": "1" },
+      { "title": "2", "value": "2" },
+      { "title": "3", "value": "3" },
+      { "title": "4", "value": "4" }
+    ]
+  }
 }
 ```
 

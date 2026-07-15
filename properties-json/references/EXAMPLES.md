@@ -23,7 +23,7 @@ A basic card with content, media, and styling controls.
         {
           "title": "Description",
           "id": "cardDescription",
-          "textarea": {
+          "textArea": {
             "default": "A short description of this card."
           }
         },
@@ -147,7 +147,7 @@ A hero section with background style toggle and overlay controls.
         {
           "title": "Subheading",
           "id": "heroSubheading",
-          "textarea": {
+          "textArea": {
             "default": "Create beautiful, responsive components without writing code."
           }
         }
@@ -187,7 +187,7 @@ A hero section with background style toggle and overlay controls.
           "resource": {}
         },
         { "divider": {} },
-        { "heading": "Overlay" },
+        { "heading": {}, "title": "Overlay" },
         {
           "title": "Show Overlay",
           "id": "showOverlay",
@@ -383,7 +383,7 @@ A button with normal/hover state toggle pattern.
         {
           "title": "CSS Classes",
           "id": "cssClasses",
-          "textarea": {
+          "textArea": {
             "default": ""
           }
         },

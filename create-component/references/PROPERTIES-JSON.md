@@ -54,8 +54,24 @@ The `id` becomes the variable name in templates: `{{propertyId}}`
 {
   "title": "Description",
   "id": "description",
-  "textarea": {
+  "textArea": {
     "default": "Enter description..."
+  }
+}
+```
+
+### Input
+
+A compact single-line input for short technical values (numbers, comma-separated lists, code-like strings).
+
+```json
+{
+  "title": "Cubic Bezier",
+  "id": "timingFunction",
+  "format": "ease-[cubic-bezier({{value}})]",
+  "input": {
+    "default": "0.95,0.05,0.795,0.035",
+    "subtitle": "x1, y1, x2, y2"
   }
 }
 ```
@@ -110,7 +126,11 @@ The `id` becomes the variable name in templates: `{{propertyId}}`
   "id": "size",
   "select": {
     "default": "medium",
-    "options": ["small", "medium", "large"]
+    "items": [
+      { "title": "Small", "value": "small" },
+      { "title": "Medium", "value": "medium" },
+      { "title": "Large", "value": "large" }
+    ]
   }
 }
 ```
@@ -123,7 +143,7 @@ The `id` becomes the variable name in templates: `{{propertyId}}`
   "id": "alignment",
   "segmented": {
     "default": "center",
-    "options": [
+    "items": [
       { "title": "Left", "value": "left" },
       { "title": "Center", "value": "center" },
       { "title": "Right", "value": "right" }
@@ -132,13 +152,17 @@ The `id` becomes the variable name in templates: `{{propertyId}}`
 }
 ```
 
-### Image
+Segmented items can use an SF Symbol `icon` instead of a `title`.
+
+### Resource (Image/File Picker)
+
+There is no `image` control — use `resource` for images and all other file types. Restrict accepted types with `accepts` (string) or `types` (array), e.g. `"resource": { "accepts": "svg" }`.
 
 ```json
 {
   "title": "Hero Image",
   "id": "heroImage",
-  "image": {}
+  "resource": {}
 }
 ```
 
@@ -149,6 +173,20 @@ The `id` becomes the variable name in templates: `{{propertyId}}`
   "title": "Button Link",
   "id": "buttonLink",
   "link": {}
+}
+```
+
+### Collection
+
+Binds a repeating set of items (e.g. tabs, slides, table columns). Note it uses `property` instead of `id`, and the item fields are defined in a nested `collections/<identifier>/properties.json` file using the same schema.
+
+```json
+{
+  "title": "Tabs",
+  "property": "tabs",
+  "collection": {
+    "identifier": "tabs"
+  }
 }
 ```
 
@@ -367,11 +405,13 @@ Output in template: `p-4`
 
 ## Grouping Properties
 
+Display controls take an empty object `{}` — the text comes from the sibling `title` key, and no `id` is needed.
+
 ### UI Dividers
 
 ```json
 {
-  "divider": true
+  "divider": {}
 }
 ```
 
@@ -379,7 +419,8 @@ Output in template: `p-4`
 
 ```json
 {
-  "heading": "Advanced Options"
+  "title": "Advanced Options",
+  "heading": {}
 }
 ```
 
@@ -387,7 +428,8 @@ Output in template: `p-4`
 
 ```json
 {
-  "information": "This setting affects all breakpoints."
+  "title": "This setting affects all breakpoints.",
+  "information": {}
 }
 ```
 
@@ -417,7 +459,12 @@ Enable per-breakpoint values:
   "responsive": true,
   "select": {
     "default": "3",
-    "options": ["1", "2", "3", "4"]
+    "items": [
+      { "title": "1", "value": "1" },
+      { "title": "2", "value": "2" },
+      { "title": "3", "value": "3" },
+      { "title": "4", "value": "4" }
+    ]
   }
 }
 ```
@@ -439,9 +486,9 @@ Enable per-breakpoint values:
         {
           "title": "Subheading",
           "id": "subheading",
-          "textarea": { "default": "Enter your message" }
+          "textArea": { "default": "Enter your message" }
         },
-        { "divider": true },
+        { "divider": {} },
         {
           "title": "Show Button",
           "id": "showButton",

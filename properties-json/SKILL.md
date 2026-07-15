@@ -250,13 +250,7 @@ Visual separator line between controls:
 
 ### heading
 
-Section heading within a group to label related controls:
-
-```json
-{ "heading": "Advanced Settings" }
-```
-
-Or with object syntax:
+Section heading within a group to label related controls. The heading text comes from the `title` key:
 
 ```json
 { "heading": {}, "title": "Advanced Settings" }

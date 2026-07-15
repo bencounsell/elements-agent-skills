@@ -100,7 +100,7 @@ Show common control configurations:
   "id": "alignment",
   "segmented": {
     "default": "center",
-    "options": [
+    "items": [
       { "title": "Left", "value": "left" },
       { "title": "Center", "value": "center" },
       { "title": "Right", "value": "right" }

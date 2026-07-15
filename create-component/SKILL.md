@@ -138,7 +138,14 @@ exports.transformHook = transformHook;
       "id": "headingLevel",
       "select": {
         "default": "h2",
-        "options": ["h1", "h2", "h3", "h4", "h5", "h6"]
+        "items": [
+          { "title": "H1", "value": "h1" },
+          { "title": "H2", "value": "h2" },
+          { "title": "H3", "value": "h3" },
+          { "title": "H4", "value": "h4" },
+          { "title": "H5", "value": "h5" },
+          { "title": "H6", "value": "h6" }
+        ]
       }
     }]
   }]
